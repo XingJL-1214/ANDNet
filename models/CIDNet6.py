@@ -307,7 +307,7 @@ class AlignedModule(nn.Layer):
         # 将high-level feature进行双线性上采样  [2, 64, 64, 128]
         h_feature = F.interpolate(
             h_feature, size=size, mode='bilinear', align_corners=True)
-        # 预测语义流场 === 其实就是输入一个3x3的卷积
+        # 预测语义流场 
         flow = self.flow_make(paddle.concat([h_feature, low_feature], 1))
 
         # 添加相对注意力机制############################
