@@ -9,4 +9,6 @@ image feature information extracted from the semantic and detail branches, furth
 ## Prepare:
 - Install gpu driver, cuda toolkit and cudnn
 - Install Paddle and PaddleSeg 
-- Download dataset and link it to PaddleSeg/data ([Cityscapes](https://paddleseg.bj.bcebos.com/dataset/cityscapes.tar), CamVid)
+- Download dataset and link it to PaddleSeg/data ([Cityscapes](https://paddleseg.bj.bcebos.com/dataset/cityscapes.tar), [CamVid](https://paddleseg.bj.bcebos.com/dataset/camvid.tar))
+## Training
+The config files of ANDNet are under 
