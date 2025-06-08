@@ -1,0 +1,65 @@
+# _base_: '../_base_/cityscapes_1024x1024.yml'
+
+model:
+  type: stdb1_50
+  num_classes: 171
+  pretrained: "/home/praiselab/YHT/home_2.5/output/a1119/G1_coco-1-/best_model/model.pdparams"
+
+optimizer:
+  # type: sgd
+  # weight_decay: 0.0005
+  type: adam
+  beta1: 0.9
+
+loss:
+  types:
+    - type: CrossEntropyLoss
+    - type: DetailAggregateLoss
+    - type: CrossEntropyLoss
+    - type: CrossEntropyLoss
+#    - type: CrossEntropyLoss
+  coef: [1, 1, 1, 1]
+
+batch_size: 32
+iters: 120000
+
+lr_scheduler:
+  type: PolynomialDecay
+  learning_rate: 0.005
+  end_lr: 0
+  power: 0.9
+  warmup_iters: 500
+  warmup_start_lr: 1.0e-5
+
+#learning_rate:
+#  value: 0.003
+#  decay:
+#    type: poly
+#    power: 1.0   #0.9-2.0
+#    end_lr: 0.0
+
+
+train_dataset:
+  type: CocoStuff
+  dataset_root: datasets/cocostuff
+  transforms:
+    - type: ResizeStepScaling
+      min_scale_factor: 0.25
+      max_scale_factor: 2.5
+      scale_step_size: 0.15
+    - type: RandomPaddingCrop
+      crop_size: [640, 640]
+    - type: RandomHorizontalFlip
+    - type: RandomDistort
+      brightness_range: 0.4
+      contrast_range: 0.4
+      saturation_range: 0.4
+    - type: Normalize
+  mode: train
+
+val_dataset:
+  type: CocoStuff
+  dataset_root: datasets/cocostuff
+  transforms:
+    - type: Normalize
+  mode: val

@@ -1,0 +1,77 @@
+#_base_: '../_base_/cityscapes.yml'
+
+#batch_size: 32
+#iters: 30000
+
+#optimizer:
+#  weight_decay: 5.0e-4
+
+lr_scheduler:
+  type: PolynomialDecay
+  warmup_iters: 200
+  warmup_start_lr: 1.0e-5
+  learning_rate: 0.003   # 0.003
+  power: 0.9
+  end_lr: 0
+
+loss:
+  types:
+    - type: CrossEntropyLoss
+    - type: DetailAggregateLoss
+    - type: CrossEntropyLoss
+    - type: CrossEntropyLoss
+  coef: [1,1,1,1]
+#loss:
+#  types:
+#    - type: OhemCrossEntropyLoss
+#      min_kept: 690000   # batch_size * 960 * 720 // 16
+#    - type: DetailAggregateLoss
+#    - type: OhemCrossEntropyLoss
+#      min_kept: 690000
+#    - type: OhemCrossEntropyLoss
+#      min_kept: 690000
+#  coef: [1, 1, 1, 1]
+
+optimizer:
+  type: adam
+#optimizer:
+#  type: sgd
+#  momentum: 0.9
+#  weight_decay: 4.0e-5
+
+model:
+  type: CIDNet6
+  num_classes: 11
+#  pretrained: '/mnt/HDD_2T/XJL/home_2.5/output/a0902/CIDNet6-camvid-dcpre/best_model/model.pdparams'
+  pretrained: '/mnt/HDD_2T/XJL/home_2.5/output/a0729-bigbackbone-best/CIDNet6-big-0.003/best_model/model.pdparams'
+
+# 把最好模型路径复制到这里
+
+train_dataset:
+  type: Camvid
+  dataset_root: datasets/camvid
+  transforms:
+    - type: ResizeStepScaling
+      min_scale_factor: 0.25
+      max_scale_factor: 2.5
+      scale_step_size: 0.05
+    - type: RandomPaddingCrop
+      crop_size: [960, 720]
+    - type: RandomHorizontalFlip
+    - type: RandomDistort
+      brightness_range: 0.4
+      contrast_range: 0.4
+      saturation_range: 0.4
+    - type: Normalize
+  mode: train
+
+val_dataset:
+  type: Camvid
+  dataset_root: datasets/camvid
+  transforms:
+    - type: Normalize
+  mode: val
+
+test_config:
+  aug_eval: True
+  scales: 1.0

@@ -1,0 +1,76 @@
+_base_: '../_base_/cityscapes.yml'
+
+batch_size: 16
+iters: 140000
+
+#optimizer:
+#  weight_decay: 5.0e-4
+
+lr_scheduler:
+  warmup_iters: 2000
+  warmup_start_lr: 1.0e-5
+  learning_rate: 0.005
+#lr_scheduler:
+#  type: PolynomialDecay
+#  learning_rate: 0.003
+#  power: 0.9
+#  end_lr: 1.0e-5
+
+loss:
+  types:
+    - type: CrossEntropyLoss
+    - type: DetailAggregateLoss
+    - type: CrossEntropyLoss
+    - type: CrossEntropyLoss
+  coef: [1, 1, 1, 1]
+#loss:
+#  types:
+#    - type: OhemCrossEntropyLoss
+#      min_kept: 130000   # batch_size * 1024 * 512 // 16
+#    - type: DetailAggregateLoss
+#    - type: OhemCrossEntropyLoss
+#      min_kept: 130000
+#  coef: [1, 1, 1]
+
+optimizer:
+  type: adam
+#optimizer:
+#  type: sgd
+#  momentum: 0.9
+#  weight_decay: 4.0e-5
+
+model:
+  type: G1_arm5_pag2
+  num_classes: 19
+  pretrained: '/home/praiselab/YHT/home_2.5/output/a1002/G1_arm_pag2_cam_1024x512-add-7450/best_model/model.pdparams'
+
+train_dataset:
+  type: Cityscapes
+  dataset_root: /home/praiselab/YHT/home_1/datasets/cityscapes
+  transforms:
+    - type: ResizeStepScaling
+      min_scale_factor: 0.15
+      max_scale_factor: 2.0
+      scale_step_size: 0.05
+    - type: RandomPaddingCrop
+#      crop_size: [1024, 512]
+      crop_size: [1536, 768]
+#      crop_size: [2048, 1024]
+    - type: RandomHorizontalFlip
+    - type: RandomDistort
+      brightness_range: 0.4
+      contrast_range: 0.4
+      saturation_range: 0.4
+    - type: Normalize
+  mode: train
+
+val_dataset:
+  type: Cityscapes
+  dataset_root: /home/praiselab/YHT/home_1/datasets/cityscapes
+  transforms:
+    - type: Normalize
+  mode: val
+
+test_config:
+  aug_eval: True
+  scales: 1.0

@@ -1,0 +1,55 @@
+_base_: '../_base_/cityscapes.yml'
+
+batch_size: 32
+iters: 120
+
+lr_scheduler:
+  type: PolynomialDecay
+  learning_rate: 0.03
+  power: 0.9
+  end_lr: 1.0e-5
+
+loss:
+  types:
+    - type: CrossEntropyLoss
+  coef: [1]
+
+optimizer:
+  type: adam
+
+model:
+  type: LFCNet
+  backbone:
+    type: MobileNetV3_s1
+    # output_stride: 8
+    # pretrained: https://bj.bcebos.com/paddleseg/dygraph/resnet50_vd_ssld_v2.tar.gz
+  enable_auxiliary_loss: False
+  align_corners: False
+  pretrained: null
+
+train_dataset:
+  type: Cityscapes
+  dataset_root: datasets/cityscapes
+  transforms:
+    - type: ResizeStepScaling
+      min_scale_factor: 0.5
+      max_scale_factor: 2.0
+      scale_step_size: 0.05
+    - type: RandomPaddingCrop
+      # crop_size: [2048, 1024]
+      crop_size: [1024, 512]
+    - type: RandomHorizontalFlip
+    - type: RandomDistort
+      brightness_range: 0.4
+      contrast_range: 0.4
+      saturation_range: 0.4
+    - type: Normalize
+  mode: train
+
+val_dataset:
+  type: Cityscapes
+  dataset_root: datasets/cityscapes
+  transforms:
+    - type: Normalize
+  mode: val
+
