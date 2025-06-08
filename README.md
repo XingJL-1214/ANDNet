@@ -5,6 +5,12 @@ image feature information extracted from the semantic and detail branches, furth
 # 
 <img width="898" alt="image" src="https://github.com/user-attachments/assets/12c16881-b2ff-4b0a-abf0-b1e87bbcc4ff" />
 
+# Code
+Semantic Correspondence Module:  
+```
+
+```
+
 # Training
 ## Prepare:
 - Install gpu driver, cuda toolkit and cudnn
