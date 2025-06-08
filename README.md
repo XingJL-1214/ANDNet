@@ -11,4 +11,5 @@ image feature information extracted from the semantic and detail branches, furth
 - Install Paddle and PaddleSeg 
 - Download dataset and link it to PaddleSeg/data ([Cityscapes](https://paddleseg.bj.bcebos.com/dataset/cityscapes.tar), [CamVid](https://paddleseg.bj.bcebos.com/dataset/camvid.tar))
 ## Training
-The config files of ANDNet are under 
+The config files of ANDNet are under `configs/GSTDC_Cityscapes`.  
+Based on the train.py script, we set the config file and start training model.
